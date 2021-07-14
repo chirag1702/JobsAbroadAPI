@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 app.post('/signup', (req, res) => {
     let name = req.body.name;
     let email = req.body.email;
-    let password = req.body.password; 0
+    let password = req.body.password;
 
     let fnQuery = `SELECT * FROM Users WHERE email = '${email}';`;
 
