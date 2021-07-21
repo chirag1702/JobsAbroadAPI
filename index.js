@@ -3,7 +3,6 @@ const http = require('http');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');;
 const app = express();
-const publicIP = require('public-ip');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -16,10 +15,6 @@ const connection = mysql.createConnection({
     user: 'mindbiz1_abroad',
     password: 'HKU\\v2&8Ek24\\N<.',
     database: 'mindbiz1_abroadjobs'
-});
-
-publicIP.v4().then(ip => {
-    console.log('your ip address is ', ip);
 });
 
 connection.connect((err) => {
@@ -95,23 +90,21 @@ app.post('/apply_job', (req, res) => {
 
     let applyJobQuery = `INSERT INTO job_applications (name, email, job_title) VALUES ('${name}', '${email}', '${jobTitle}');`;
 
-    // connection.query(fnQuery, (err, result) => {
-    //     if (err) {
-    //         console.log(err);
-    //     } else {
-    //         if (result.length == 0) {
-
-    //         } else {
-    //             res.send({ status: 0, message: 'you have already applied for this job!!' });
-    //         }
-    //     }
-    // });
-
-    connection.query(applyJobQuery, (err, result) => {
+    connection.query(fnQuery, (err, result) => {
         if (err) {
             console.log(err);
         } else {
-            res.send({ status: 1, message: 'job application submitted successfully!!' });
+            if (result.length == 0) {
+                connection.query(applyJobQuery, (err, result) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        res.send({ status: 1, message: 'job application submitted successfully!!' });
+                    }
+                });
+            } else {
+                res.send({ status: 0, message: 'you have already applied for this job!!' });
+            }
         }
     });
 })
@@ -122,6 +115,6 @@ async function HashPassword(password) {
     return hashedPassword;
 }
 
-server.listen(2000, () => {
-    console.log(`Server started on port: ${2000}`);
+server.listen(process.env.PORT, () => {
+    console.log(`Server started on port: ${process.env.PORT}`);
 });
