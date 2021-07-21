@@ -3,6 +3,7 @@ const http = require('http');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');;
 const app = express();
+const publicIP = require('public-ip');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -15,6 +16,10 @@ const connection = mysql.createConnection({
     user: 'mindbiz1_abroad',
     password: 'HKU\\v2&8Ek24\\N<.',
     database: 'mindbiz1_abroadjobs'
+});
+
+publicIP.v4().then(ip => {
+    console.log('your ip address is ', ip);
 });
 
 connection.connect((err) => {
