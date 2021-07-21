@@ -1,9 +1,11 @@
 const express = require('express');
 const http = require('http');
 const mysql = require('mysql');
-const bcrypt = require('bcrypt');;
+const bcrypt = require('bcrypt');
+const cors = require('cors');
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
